@@ -15,7 +15,7 @@ The File Collector script is a command-line utility designed to collect and extr
 
     
   
-  1.  **Clone the Repository:**
+  1.  **Clone the Repository :**
   
     
       
@@ -25,13 +25,13 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```
   
-  3.  **Install Dependencies (Optional):**
+  3.  **Install Dependencies :**
   
       The script uses standard Python libraries. Ensure you have Python installed on your system.
   
-  4.  **Set Up Aliases:**
+  4.  **Set Up Aliases :**
   
-      **Zsh:**
+      **Zsh :**
       
       - Open your Zsh configuration file, usually `~/.zshrc`, in a text editor.
       
@@ -51,7 +51,7 @@ The File Collector script is a command-line utility designed to collect and extr
       
       - Save and exit the editor.
       
-      - Reload your Zsh configuration:
+      - Reload your Zsh configuration :
       
       ```bash
       
@@ -59,7 +59,7 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```
       
-      **Bash:**
+      **Bash :**
       
       - Open your Bash configuration file, usually `~/.bashrc`, in a text editor.
       
@@ -69,7 +69,7 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```
       
-      - Add the following line to create an alias that allows passing arguments:
+      - Add the following line to create an alias that allows passing arguments :
       
       ```bash
       
@@ -87,34 +87,37 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```
   
-      Note: Before configuring aliases, ensure you move the file_collector_script.py to a directory of your choice. This allows you to run the script from any location, enhancing flexibility and convenience.
+      Note: Before configuring aliases, ensure you move `collect.py` to a directory of your choice. This allows you to run the script from any location, enhancing flexibility and convenience.
     
 
-## Usage:
+## Usage :
 
   
   
-Run the script using the alias you've set up:
+- Run the script using the alias you've set up :
   
-  ```bash
+    ```bash
+    
+    collect [options]
+    
+    ```
   
-  collect [options]
+- Options :
   
-  ```
+  `-extract`: Extract content from selected files.
+    
+  `-all`: Extract content from all collected files.
+    
+  `-open`: Open the generated file in the default app.
+    
+  `-copy`: Copy the content to the clipboard.
+    
+  `extensions`: Specify file extensions to collect.
+
   
-Options:
-  
-`-extract`: Extract content from selected files.
-  
-`-all`: Extract content from all collected files.
-  
-`-open`: Open the generated file in the default app.
-  
-`-copy`: Copy the content to the clipboard.
-  
-`extensions`: Specify file extensions to collect.
-  
-Example: Collect files with specified extensions, extract content, and open the generated file
+- Example :
+
+  Collect files with specified extensions, extract content, and open the generated file
   
   
   ```bash
@@ -123,10 +126,10 @@ Example: Collect files with specified extensions, extract content, and open the 
   
   ```
   
-To view the available options and usage information:
+  To view the available options and usage information :
+    
+    ```bash
   
-  ```bash
-
-  collect --help
-  
-  ```
+    collect --help
+    
+    ```
