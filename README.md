@@ -73,7 +73,7 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```bash
       
-      alias collect='python /path/to/file_collector_script.py $@'
+      alias collect='python /path/to/collector.py $@'
       
       ```
       
@@ -87,7 +87,7 @@ The File Collector script is a command-line utility designed to collect and extr
       
       ```
   
-      Note: Before configuring aliases, ensure you move `collect.py` to a directory of your choice. This allows you to run the script from any location, enhancing flexibility and convenience.
+      Note: Before configuring aliases, ensure you move `collector.py` to a directory of your choice. This allows you to run the script from any location, enhancing flexibility and convenience.
     
 
 ## Usage :
