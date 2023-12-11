@@ -8,8 +8,10 @@ The File Collector script is a command-line utility designed to collect and extr
 
 1.  **Clone the Repository:**
 
-	`git clone <repository-url>`
-	`cd <repository-directory>`
+	```bash
+    git clone <repository-url>
+	cd <repository-directory>
+    ```
     
 3.  **Install Dependencies (Optional):** 
    
@@ -21,45 +23,53 @@ The File Collector script is a command-line utility designed to collect and extr
         
         -   Open your Zsh configuration file, usually `~/.zshrc`, in a text editor.
         
-        `nano ~/.zshrc` 
+        ```bash
+        nano ~/.zshrc
+        ```
         
         -   Add the following line to create an alias that allows passing arguments:
         
-        bashCopy code
-        
-        `alias collect='python /path/to/file_collector_script.py $@'` 
-        
+        ```bash
+        alias collect='python /path/to/file_collector_script.py $@'
+        ```
         -   Save and exit the editor.
             
         -   Reload your Zsh configuration:
         
-        `source ~/.zshrc` 
+        ```bash
+        source ~/.zshrc
+        ```
         
     -   **Bash:**
         
         -   Open your Bash configuration file, usually `~/.bashrc`, in a text editor.
         
-        `nano ~/.bashrc` 
+        ```bash
+        nano ~/.bashrc
+        ```
         
         -   Add the following line to create an alias that allows passing arguments:
         
-        `alias collect='python /path/to/file_collector_script.py $@'` 
+        ```bash
+        alias collect='python /path/to/file_collector_script.py $@'
+        ```
         
         -   Save and exit the editor.
             
         -   Reload your Bash configuration:
-            
-        
-        bashCopy code
-        
-        `source ~/.bashrc` 
+                    
+        ```bash
+        source ~/.bashrc
+        ```
         
 
 #### Usage:
 
 -   Run the script using the alias you've set up:
     
-    `collect [options]` 
+    ```bash
+    collect [options]
+    ```
     
 -   Options:
     
@@ -70,8 +80,12 @@ The File Collector script is a command-line utility designed to collect and extr
     -   `extensions`: Specify file extensions to collect.
 -   Example: Collect files with specified extensions, extract content, and open the generated file
 
-	`collect -extract -open -copy py txt`
+	```bash
+    collect -extract -open -copy py txt
+    ```
     
 -   To view the available options and usage information:
     
-    `collect --help` 
+    ```bash
+    collect --help
+    ```
