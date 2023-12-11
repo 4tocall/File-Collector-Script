@@ -103,7 +103,9 @@ The File Collector script is a command-line utility designed to collect and extr
     ```
   
 - Options :
-  
+
+  `extensions`: Specify file extensions to collect.
+
   `-extract`: Extract content from selected files.
     
   `-all`: Extract content from all collected files.
@@ -112,8 +114,6 @@ The File Collector script is a command-line utility designed to collect and extr
     
   `-copy`: Copy the content to the clipboard.
     
-  `extensions`: Specify file extensions to collect.
-
   
 - Example :
 
@@ -122,7 +122,7 @@ The File Collector script is a command-line utility designed to collect and extr
   
   ```bash
   
-  collect -extract -open -copy py txt
+  collect py html -extract -open -copy
   
   ```
   
