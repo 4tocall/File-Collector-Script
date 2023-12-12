@@ -113,6 +113,8 @@ The File Collector script is a command-line utility designed to collect and extr
   `-open`: Open the generated file in the default app.
     
   `-copy`: Copy the content to the clipboard.
+
+  `--output` : Specify the output file name when extracting content (e.g., `--output fichier.txt`).
     
   
 - Example :
