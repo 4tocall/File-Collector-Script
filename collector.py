@@ -19,7 +19,6 @@ NO_EXTENSION_MESSAGE = "No valid extensions provided. Exiting."
 NO_FILES_FOUND_MESSAGE = "No files found with the specified extensions."
 FILE_NOT_FOUND_MESSAGE = "The file {} was not found. No content was copied."
 ERROR_COPY_MESSAGE = "An error occurred while copying contents to the clipboard: {}"
-SKIPPING_EXTRACTION_MESSAGE = "Skipping extraction."
 
 def is_ignored_directory(directory):
     return directory in IGNORED_DIRECTORIES
@@ -67,7 +66,7 @@ def display_files(files):
 def copy_to_clipboard(content):
     system_platform = platform.system()
     
-    if system_platform == "Darwin":  # macOS
+    if system_platform == "Darwin":
         subprocess.run(["pbcopy"], input=content.encode("utf-8"))
     elif system_platform == "Linux":
         try:
@@ -98,6 +97,7 @@ def main():
     parser.add_argument('-all', action='store_true', help='Extract all files')
     parser.add_argument('-open', action='store_true', help='Open the generated file in the default app')
     parser.add_argument('-copy', action='store_true', help='Copy the content to the clipboard')
+    parser.add_argument('--output', help='Specify the output file name')
 
     args = parser.parse_args()
 
@@ -106,6 +106,7 @@ def main():
     extract_all = args.all
     open_file = args.open
     copy_to_clip = args.copy
+    output_file_name = args.output
 
     if not extensions:
         print("Possible extensions: " + " ".join(get_possible_extensions()))
@@ -139,7 +140,8 @@ def main():
             else:
                 selected_indices = [int(i) for i in selected_indices_input.split()]
 
-        output_file_name = input(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
+        if not output_file_name:
+            output_file_name = input(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
 
         if not output_file_name.endswith('.txt'):
             output_file_name += '.txt'
@@ -155,24 +157,20 @@ def main():
                         content += "\n\n"
             copy_to_clipboard(content)
             print(COPY_SUCCESS_MESSAGE)
-            return
+        else:
+            with open(output_file_name, "w") as output:
+                for index in selected_indices:
+                    if 0 <= index < len(collected_files):
+                        selected_file = collected_files[index]
+                        output.write(f"// {selected_file} :\n\n")
+                        with open(selected_file, "r") as file_content:
+                            output.write(file_content.read())
+                        output.write("\n\n")
 
-        with open(output_file_name, "w") as output:
-            for index in selected_indices:
-                if 0 <= index < len(collected_files):
-                    selected_file = collected_files[index]
-                    output.write(f"// {selected_file} :\n\n")
-                    with open(selected_file, "r") as file_content:
-                        output.write(file_content.read())
-                    output.write("\n\n")
+            print(CONTENT_SAVED_MESSAGE.format(output_file_name))
 
-        print(CONTENT_SAVED_MESSAGE.format(output_file_name))
-
-        if open_file:
-            open_file_in_default_app(output_file_name)
-
-    else:
-        print(SKIPPING_EXTRACTION_MESSAGE)
+            if open_file:
+                open_file_in_default_app(output_file_name)
 
 if __name__ == "__main__":
     main()
