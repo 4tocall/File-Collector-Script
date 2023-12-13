@@ -5,7 +5,7 @@ import platform
 
 IGNORED_DIRECTORIES = { '__pycache__', '.git', '.idea', '.vscode', '__init__', 'build', 'dist', 'venv', 'node_modules', 'env', '.venv', '.mypy_cache', '.pytest_cache', '.vs', '__pycache__', '.ipynb_checkpoints', '.mypy_cache', '.pylint', '.pytest_cache', '.tox', '.serverless', '.local', '.history', '.eggs', '*.egg-info', '*.DS_Store' }
 
-ALLOWED_EXTENSIONS = {'js', 'jsx', 'html', 'json', 'xml', 'yaml', 'yml', 'scss', 'sass', 'css', 'py', 'php'}
+ALLOWED_EXTENSIONS = {'js', 'jsx', 'html', 'json', 'xml', 'yaml', 'yml', 'scss', 'sass', 'css', 'py', 'php', 'md', 'java', 'cpp', 'h', 'txt', 'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'tar', 'gz', 'sql', 'cs', 'swift', 'go', 'ts', 'tsx', 'rs', 'kt', 'sh', 'vue', 'scala'}
 
 ENTER_EXTENSIONS_PROMPT = "Enter file extensions separated by spaces: "
 SELECT_INDICES_PROMPT = "Enter the indices of the files you want to collect (separated by spaces), or press Enter for 'all': "
