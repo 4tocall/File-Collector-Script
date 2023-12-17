@@ -94,7 +94,7 @@ def open_file_in_default_app(file_path):
         print(color("Opening files not supported on this platform.", "1;31;40"))
 
 def stylized_prompt(prompt_message):
-    return input(color(prompt_message, "1;37;40"))
+    return input(color(prompt_message, "1;37"))
 
 def get_valid_indices(selected_indices_input, total_files):
     try:
@@ -124,19 +124,19 @@ def main():
     output_file_name = args.output
 
     if not extensions:
-        print(color("Possible extensions: " + " ".join(get_possible_extensions()), "1;31;40"))
+        print(color("Possible extensions: " + " ".join(get_possible_extensions()), "1;31"))
         extensions = stylized_prompt(ENTER_EXTENSIONS_PROMPT).split()
 
     extensions = filter_allowed_extensions(extensions)
 
     if not extensions:
-        print(color(NO_EXTENSION_MESSAGE, "1;31;40"))
+        print(color(NO_EXTENSION_MESSAGE, "1;31"))
         return
 
     collected_files = collect_files(extensions)
 
     if not collected_files:
-        print(color(NO_FILES_FOUND_MESSAGE, "1;31;40"))
+        print(color(NO_FILES_FOUND_MESSAGE, "1;31"))
         return
 
     display_files(collected_files)
@@ -159,7 +159,7 @@ def main():
                     selected_indices = valid_indices
                     break
                 else:
-                    print(color("Invalid indices. Please enter valid indices.", "1;31;40"))
+                    print(color("Invalid indices. Please enter valid indices.", "1;31"))
 
         if not output_file_name:
             output_file_name = stylized_prompt(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
@@ -177,7 +177,7 @@ def main():
                         content += file_content.read()
                         content += "\n\n"
             copy_to_clipboard(content)
-            print(color(COPY_SUCCESS_MESSAGE, "1;32;40"))
+            print(color(COPY_SUCCESS_MESSAGE, "1;32"))
         else:
             with open(output_file_name, "w") as output:
                 for index in selected_indices:
