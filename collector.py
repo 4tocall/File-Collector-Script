@@ -3,7 +3,7 @@ import argparse
 import subprocess
 import platform
 
-IGNORED_DIRECTORIES = { '__pycache__', '.git', '.idea', '.vscode', '__init__', 'build', 'dist', 'venv', 'node_modules', 'env', '.venv', '.mypy_cache', '.pytest_cache', '.vs', '__pycache__', '.ipynb_checkpoints', '.mypy_cache', '.pylint', '.pytest_cache', '.tox', '.serverless', '.local', '.history', '.eggs', '*.egg-info', '*.DS_Store' }
+IGNORED_DIRECTORIES = {'__pycache__', '.git', '.idea', '.vscode', '__init__', 'build', 'dist', 'venv', 'node_modules', 'env', '.venv', '.mypy_cache', '.pytest_cache', '.vs', '__pycache__', '.ipynb_checkpoints', '.mypy_cache', '.pylint', '.pytest_cache', '.tox', '.serverless', '.local', '.history', '.eggs', '*.egg-info', '*.DS_Store'}
 
 ALLOWED_EXTENSIONS = {'js', 'jsx', 'html', 'json', 'xml', 'yaml', 'yml', 'scss', 'sass', 'css', 'py', 'php', 'md', 'java', 'cpp', 'h', 'txt', 'png', 'jpg', 'jpeg', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'tar', 'gz', 'sql', 'cs', 'swift', 'go', 'ts', 'tsx', 'rs', 'kt', 'sh', 'vue', 'scala'}
 
@@ -19,6 +19,9 @@ NO_EXTENSION_MESSAGE = "No valid extensions provided. Exiting."
 NO_FILES_FOUND_MESSAGE = "No files found with the specified extensions."
 FILE_NOT_FOUND_MESSAGE = "The file {} was not found. No content was copied."
 ERROR_COPY_MESSAGE = "An error occurred while copying contents to the clipboard: {}"
+
+def color(text, color_code):
+    return f"\033[{color_code}m{text}\033[0m"
 
 def is_ignored_directory(directory):
     return directory in IGNORED_DIRECTORIES
@@ -72,11 +75,11 @@ def copy_to_clipboard(content):
         try:
             subprocess.run(["xclip", "-selection", "clipboard"], input=content.encode("utf-8"))
         except FileNotFoundError:
-            print("Command 'xclip' not found. Please install xclip or use a package like pyperclip.")
+            print(color("Command 'xclip' not found. Please install xclip or use a package like pyperclip.", "1;31;40"))
     elif system_platform == "Windows":
         subprocess.run(["clip"], input=content.encode("utf-8"), shell=True)
     else:
-        print("Clipboard copy not supported on this platform. Please use a package like pyperclip.")
+        print(color("Clipboard copy not supported on this platform. Please use a package like pyperclip.", "1;31;40"))
 
 def open_file_in_default_app(file_path):
     system_platform = platform.system()
@@ -88,7 +91,10 @@ def open_file_in_default_app(file_path):
     elif system_platform == "Windows":
         subprocess.run(["start", "notepad", file_path], shell=True)
     else:
-        print("Opening files not supported on this platform.")
+        print(color("Opening files not supported on this platform.", "1;31;40"))
+
+def stylized_prompt(prompt_message):
+    return input(color(prompt_message, "1;37;40"))
 
 def main():
     parser = argparse.ArgumentParser(description='File Collector')
@@ -109,24 +115,24 @@ def main():
     output_file_name = args.output
 
     if not extensions:
-        print("Possible extensions: " + " ".join(get_possible_extensions()))
-        extensions = input(ENTER_EXTENSIONS_PROMPT).split()
+        print(color("Possible extensions: " + " ".join(get_possible_extensions()), "1;31;40"))
+        extensions = stylized_prompt(ENTER_EXTENSIONS_PROMPT).split()
 
     extensions = filter_allowed_extensions(extensions)
 
     if not extensions:
-        print(NO_EXTENSION_MESSAGE)
+        print(color(NO_EXTENSION_MESSAGE, "1;31;40"))
         return
 
     collected_files = collect_files(extensions)
 
     if not collected_files:
-        print(NO_FILES_FOUND_MESSAGE)
+        print(color(NO_FILES_FOUND_MESSAGE, "1;31;40"))
         return
 
     display_files(collected_files)
 
-    do_extract = do_extract or (copy_to_clip or extract_all or open_file or (len(collected_files) == 1 and input("Do you want to extract content? (y/n): ").lower() == "y"))
+    do_extract = do_extract or (copy_to_clip or extract_all or open_file or (len(collected_files) == 1 and stylized_prompt("Do you want to extract content? (y/n): ").lower() == "y"))
 
     if do_extract:
         if extract_all:
@@ -134,14 +140,14 @@ def main():
         elif len(collected_files) == 1:
             selected_indices = [0]
         else:
-            selected_indices_input = input(SELECT_INDICES_PROMPT)
+            selected_indices_input = stylized_prompt(SELECT_INDICES_PROMPT)
             if selected_indices_input.strip() == "":
                 selected_indices = range(len(collected_files))
             else:
                 selected_indices = [int(i) for i in selected_indices_input.split()]
 
         if not output_file_name:
-            output_file_name = input(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
+            output_file_name = stylized_prompt(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
 
         if not output_file_name.endswith('.txt'):
             output_file_name += '.txt'
@@ -156,7 +162,7 @@ def main():
                         content += file_content.read()
                         content += "\n\n"
             copy_to_clipboard(content)
-            print(COPY_SUCCESS_MESSAGE)
+            print(color(COPY_SUCCESS_MESSAGE, "1;32;40"))
         else:
             with open(output_file_name, "w") as output:
                 for index in selected_indices:
@@ -167,7 +173,7 @@ def main():
                             output.write(file_content.read())
                         output.write("\n\n")
 
-            print(CONTENT_SAVED_MESSAGE.format(output_file_name))
+            print(color(CONTENT_SAVED_MESSAGE.format(output_file_name), "1;32;40"))
 
             if open_file:
                 open_file_in_default_app(output_file_name)
