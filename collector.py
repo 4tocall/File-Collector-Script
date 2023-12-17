@@ -96,6 +96,15 @@ def open_file_in_default_app(file_path):
 def stylized_prompt(prompt_message):
     return input(color(prompt_message, "1;37;40"))
 
+def get_valid_indices(selected_indices_input, total_files):
+    try:
+        selected_indices = [int(i) for i in selected_indices_input.split()]
+        if all(0 <= index < total_files for index in selected_indices):
+            return selected_indices
+    except ValueError:
+        pass
+    return None
+
 def main():
     parser = argparse.ArgumentParser(description='File Collector')
     parser.add_argument('extensions', nargs='*', default=[], choices=list(ALLOWED_EXTENSIONS), help='File extensions to collect')
@@ -140,11 +149,17 @@ def main():
         elif len(collected_files) == 1:
             selected_indices = [0]
         else:
-            selected_indices_input = stylized_prompt(SELECT_INDICES_PROMPT)
-            if selected_indices_input.strip() == "":
-                selected_indices = range(len(collected_files))
-            else:
-                selected_indices = [int(i) for i in selected_indices_input.split()]
+            while True:
+                selected_indices_input = stylized_prompt(SELECT_INDICES_PROMPT)
+                if selected_indices_input.strip() == "":
+                    selected_indices = range(len(collected_files))
+                    break
+                valid_indices = get_valid_indices(selected_indices_input, len(collected_files))
+                if valid_indices is not None:
+                    selected_indices = valid_indices
+                    break
+                else:
+                    print(color("Invalid indices. Please enter valid indices.", "1;31;40"))
 
         if not output_file_name:
             output_file_name = stylized_prompt(ENTER_FILE_NAME_PROMPT) if not copy_to_clip else "output.txt"
