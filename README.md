@@ -1,137 +1,118 @@
+# file-collector
 
-# File Collector Script
+> Bundle source files into a single artifact — for LLM context, code reviews, sharing, or archiving.
 
-  
+## Why
 
-## Description:
+Pasting a project into an LLM is the #1 use case for tools like this, and that drove every design decision in v2:
 
-  
+- **Markdown / XML / JSON output** with proper language fences, not just `// path:` separators
+- **Respects `.gitignore`** — no more shipping `node_modules` by accident
+- **Token counting** (with `tiktoken` if installed)
+- **Binary detection** — won't crash on `.png` or `.zip`
+- **UTF-8 by default**, with safe fallbacks
+- **Glob includes / excludes** for fine-grained control
+- **Pretty terminal output** via `rich`
 
-The File Collector script is a command-line utility designed to collect and extract content from specified files within a directory tree. It supports various file types and provides options for extracting content, opening the generated file in the default app, and copying content to the clipboard.
+## Install
 
-  
+```bash
+pipx install file-collector       # recommended (isolated, on PATH)
+# or
+pip install file-collector
+```
 
-## Installation:
+For token counting:
 
-    
-  
-  1.  **Clone the Repository :**
-  
-    
-      
-      ```bash
-      
-      git clone https://github.com/4tocall/File-Collector-Script
-      
-      ```
-  
-  3.  **Install Dependencies :**
-  
-      The script uses standard Python libraries. Ensure you have Python installed on your system.
-  
-  4.  **Set Up Aliases :**
-  
-      **Zsh :**
-      
-      - Open your Zsh configuration file, usually `~/.zshrc`, in a text editor.
-      
-      ```bash
-      
-      nano ~/.zshrc
-      
-      ```
-      
-      - Add the following line to create an alias that allows passing arguments:
-      
-      ```bash
-      
-      alias collect='python /path/to/file_collector_script.py $@'
-      
-      ```
-      
-      - Save and exit the editor.
-      
-      - Reload your Zsh configuration :
-      
-      ```bash
-      
-      source ~/.zshrc
-      
-      ```
-      
-      **Bash :**
-      
-      - Open your Bash configuration file, usually `~/.bashrc`, in a text editor.
-      
-      ```bash
-      
-      nano ~/.bashrc
-      
-      ```
-      
-      - Add the following line to create an alias that allows passing arguments :
-      
-      ```bash
-      
-      alias collect='python /path/to/collector.py $@'
-      
-      ```
-      
-      - Save and exit the editor.
-      
-      - Reload your Bash configuration:
-      
-      ```bash
-      
-      source ~/.bashrc
-      
-      ```
-  
-      Note: Before configuring aliases, ensure you move `collector.py` to a directory of your choice. This allows you to run the script from any location, enhancing flexibility and convenience.
-    
+```bash
+pipx install "file-collector[tokens]"
+```
 
-## Usage :
+No alias setup, no `chmod +x`, no `.zshrc` editing. The `collect` command lands on your PATH automatically.
 
-  
-  
-- Run the script using the alias you've set up :
-  
-    ```bash
-    
-    collect [options]
-    
-    ```
-  
-- Options :
+## Quick usage
 
-  `extensions`: Specify file extensions to collect.
+```bash
+# Interactive: prompts for extensions, shows a table, asks which to include
+collect
 
-  `-extract`: Extract content from selected files.
-    
-  `-all`: Extract content from all collected files.
-    
-  `-open`: Open the generated file in the default app.
-    
-  `-copy`: Copy the content to the clipboard.
+# Bundle all .py and .ts files into Markdown, copy to clipboard
+collect py ts --all --copy
 
-  `--output` : Specify the output file name when extracting content (e.g., `--output fichier.txt`).
-    
-  
-- Example :
+# Everything (gitignored excluded) as XML, written to ctx.xml, opened
+collect --all --format xml --output ctx.xml --open
 
-  Collect files with specified extensions, extract content, and open the generated file
-  
-  
-  ```bash
-  
-  collect py html -extract -open -copy
-  
-  ```
-  
-  To view the available options and usage information :
-    
-    ```bash
-  
-    collect --help
-    
-    ```
+# All .py files outside tests/, with token count
+collect py --exclude 'tests/**' --all --copy --tokens
+
+# Range selection in the interactive picker:
+#   "0 3 5"     pick those
+#   "0-4"      pick 0 through 4
+#   "0,2,5-7"  combine
+
+# Run without installing the alias
+python -m collector py --all --copy
+```
+
+## All options
+
+```text
+ARGUMENTS
+  EXTENSIONS...      Extensions to collect (e.g. py ts md). Omit to be prompted.
+
+OPTIONS
+  -r, --root PATH        Directory to scan (default: cwd)
+  -a, --all              Select every matching file, skip the picker
+  -o, --output PATH      Output file (default: ./collected.<ext>)
+  -f, --format FMT       md | txt | xml | json (default: md)
+  -c, --copy             Copy to clipboard instead of writing a file
+      --open             Open the output in your default app afterwards
+  -x, --exclude GLOB     Exclude glob (repeatable): -x 'tests/**' -x '*.snap'
+  -i, --include GLOB     Require glob (repeatable)
+      --max-size BYTES   Skip files larger than this (default: 1_000_000)
+      --no-gitignore     Ignore .gitignore rules
+      --no-tree          Skip the file tree header
+      --tokens           Estimate token count
+  -q, --quiet            Suppress non-essential output
+  -v, --version          Print version
+```
+
+## Output formats
+
+**Markdown** (default) — best for human-readable bundles and LLM prompts:
+
+````markdown
+## `src/auth.py`
+
+```python
+def login(): ...
+```
+````
+
+**XML** — recommended for Claude and other LLMs that parse multi-file context:
+
+```xml
+<files>
+  <file path="src/auth.py" size="42">
+def login(): ...
+  </file>
+</files>
+```
+
+**JSON** — for piping into other tools.
+
+**Text** — the legacy plain-text format with `// path:` separators.
+
+## Development
+
+```bash
+git clone https://github.com/4tocall/File-Collector-Script
+cd File-Collector-Script
+pip install -e ".[dev,tokens]"
+pytest
+ruff check .
+```
+
+## License
+
+MIT — see `LICENSE`.
