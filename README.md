@@ -1,18 +1,8 @@
-```
-   ▄████████  ▄██████▄   ▄█        ▄█        ▄████████  ▄████████     ███
-  ███    ███ ███    ███ ███       ███       ███    ███ ███    ███ ▀█████████▄
-  ███    █▀  ███    ███ ███       ███       ███    █▀  ███    █▀     ▀███▀▀██
-  ███        ███    ███ ███       ███      ▄███▄▄▄     ███            ███   ▀
-▀███████████ ███    ███ ███       ███     ▀▀███▀▀▀     ███            ███
-         ███ ███    ███ ███       ███       ███    █▄  ███    █▄      ███
-   ▄█    ███ ███    ███ ███▌    ▄ ███▌    ▄ ███    ███ ███    ███     ███
- ▄████████▀   ▀██████▀  █████▄▄██ █████▄▄██ ██████████ ████████▀     ▄████▀
-                        ▀         ▀
-```
+# file-collector
+
+> Bundle source files into a single artifact — for LLM context, code reviews, sharing, or archiving.
 
 <div align="center">
-
-**Bundle source files into a single artifact — for LLM context, code reviews, sharing, or archiving.**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -26,26 +16,13 @@
 
 Pasting a whole project into an LLM is the #1 use case for tools like this, and it drove every design decision in v2.
 
-```
-                                  ┌──────────────────┐
-   ┌─────────┐                    │  collected.md    │
-   │  src/   │ ─┐                 │  ────────────    │
-   ├─────────┤  │   ┌─────────┐   │  ## main.py      │
-   │  *.py   │  └──▶│ collect │──▶│  ```python       │
-   │  *.ts   │  ┌──▶│         │   │  def hello()...  │
-   ├─────────┤  │   └─────────┘   │  ```             │
-   │ tests/  │ ─┘                 │  ## utils.ts     │
-   └─────────┘                    │  ...             │
-                                  └──────────────────┘
-```
-
-- ✅ Markdown / XML / JSON / TXT output with proper language fences
-- ✅ Respects `.gitignore` — no more shipping `node_modules` by accident
-- ✅ Token counting (with `tiktoken` if installed)
-- ✅ Binary detection — won't crash on `.png` or `.zip`
-- ✅ UTF-8 by default, with safe fallbacks
-- ✅ Glob include / exclude patterns
-- ✅ Pretty terminal output via `rich`
+- Markdown / XML / JSON / TXT output with proper language fences
+- Respects `.gitignore` — no more shipping `node_modules` by accident
+- Token counting (with `tiktoken` if installed)
+- Binary detection — won't crash on `.png` or `.zip`
+- UTF-8 by default, with safe fallbacks
+- Glob include / exclude patterns
+- Pretty terminal output via `rich`
 
 ---
 
@@ -61,7 +38,7 @@ For token counting:
 pipx install "file-collector[tokens] @ git+https://github.com/4tocall/File-Collector-Script.git"
 ```
 
-> 💡 No alias setup, no `chmod +x`, no `.zshrc` editing. The `collect` command lands on your PATH automatically.
+> No alias setup, no `chmod +x`, no `.zshrc` editing. The `collect` command lands on your PATH automatically.
 
 ---
 
@@ -86,12 +63,12 @@ python -m collector py --all --copy
 
 ### Range selection in the interactive picker
 
-```
-   0 3 5       ─►  pick those
-   0-4         ─►  pick 0 through 4
-   0,2,5-7     ─►  combine
-   (blank)     ─►  pick all
-```
+| Input        | Selection             |
+| ------------ | --------------------- |
+| `0 3 5`      | pick those            |
+| `0-4`        | pick 0 through 4      |
+| `0,2,5-7`    | combine               |
+| *(blank)*    | pick all              |
 
 ---
 
@@ -159,17 +136,15 @@ file-collector/
 ├── pyproject.toml          ← modern packaging (hatchling)
 ├── README.md
 ├── LICENSE
-├── src/collector/
-│   ├── __init__.py
-│   ├── __main__.py         ← enables `python -m collector`
-│   ├── cli.py              ← Typer-based CLI with Rich output
-│   ├── config.py           ← dataclass config + language map
-│   ├── discovery.py        ← file walking + .gitignore + binary skip
-│   ├── formatters.py       ← md / txt / xml / json renderers
-│   ├── platform_utils.py   ← clipboard + open helpers
-│   └── tokens.py           ← optional tiktoken counting
-└── tests/
-    └── test_collector.py   ← 25 tests
+└── src/collector/
+    ├── __init__.py
+    ├── __main__.py         ← enables `python -m collector`
+    ├── cli.py              ← Typer-based CLI with Rich output
+    ├── config.py           ← dataclass config + language map
+    ├── discovery.py        ← file walking + .gitignore + binary skip
+    ├── formatters.py       ← md / txt / xml / json renderers
+    ├── platform_utils.py   ← clipboard + open helpers
+    └── tokens.py           ← optional tiktoken counting
 ```
 
 ---
@@ -179,9 +154,7 @@ file-collector/
 ```bash
 git clone git@github.com:4tocall/File-Collector-Script.git
 cd File-Collector-Script
-pip install -e ".[dev,tokens]"
-pytest
-ruff check .
+pip install -e ".[tokens]"
 ```
 
 ---
@@ -197,7 +170,6 @@ ruff check .
 - Add token counting via `tiktoken` (optional dependency)
 - Add glob include / exclude patterns (`--exclude 'tests/**'`)
 - Replace alias setup with `pyproject.toml` entry point
-- Add test suite (25 tests)
 - UTF-8 everywhere with safe fallbacks
 
 ### v0.1.0
